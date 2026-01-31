@@ -19,8 +19,7 @@
         // 可选：添加其他请求头（如 Token）
         // 'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify(param), // 将 JS 对象转为 JSON 字符串
-      credentials: 'same-origin'
+      body: JSON.stringify(param)
     })
         .then(res => {
             
