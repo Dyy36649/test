@@ -14,10 +14,11 @@
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
     fetch('http://127.0.0.1:3000/admin',{
          headers: { 
-        'Referer': 'http://127.0.0.1:3000'
-        },
-        mode: 'cors' ,
-        cache: 'no-cache'
+            'Referer': 'http://127.0.0.1:3000'
+         },
+         mode: 'cors' ,
+         credentials: 'include',
+         cache: 'no-cache'
     })
         .then(res => {
             const respStatus = res.status;
