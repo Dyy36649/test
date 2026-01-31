@@ -19,7 +19,8 @@
         // 可选：添加其他请求头（如 Token）
         // 'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify(param)
+      body: JSON.stringify(param),
+      credentials: 'include'
     })
         .then(res => {
             
